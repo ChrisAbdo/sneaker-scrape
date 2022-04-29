@@ -28,7 +28,7 @@ def start_project():
     # if beginningChoice equals a, then run users
     if beginningChoice == "a":
         # set q to search for sneakers, sneaker, kicks
-        query = "sneakers"
+        query = input('Please enter your search query: ')
         users = api.search_users(query)
         for user in users:
             print(user.screen_name+' - '+str(user.followers_count)+' followers')
@@ -45,8 +45,7 @@ def start_project():
                 'These are the users that are worth following (more than 100k followers)')
             for user in users:
                 if user.followers_count > 100000:
-
-                    print(user.screen_name+' - '+'you should follow')
+                    print(user.screen_name + ' - ' + 'you should follow')
                     print("\n")
 
         else:
@@ -55,14 +54,44 @@ def start_project():
     if beginningChoice == "b":
         choice = input("Enter the hashtag: ")
 
-        tweets = tweepy.Cursor(api.search_tweets, q=choice).items(25)
+        tweets = tweepy.Cursor(api.search_tweets, q=choice).items(2)
 
         for tweet in tweets:
             # if tweet.text contains 'test tweet 1', return hello!
             if '$' in tweet.text:
                 print("hello!")
             print(tweet.text)
+            # print the amount of likes that the tweet has
+            print(str(tweet.favorite_count)+' likes')
+
             print("\n")
+
+    if beginningChoice == "c":
+        print("Enter the @ of the trusted sneaker account you would like to pull information from. We recommend ")
+
+        def get_tweets(username):
+            tweets = api.user_timeline(screen_name=username)
+
+            # Empty Array
+            tweetArray = []
+
+            # create array of tweet information: username,
+            # tweet id, date/time, text
+            # CSV file created
+            tweets_for_csv = [tweet.text for tweet in tweets]
+            for j in tweets_for_csv:
+
+                # Appending tweets to the empty array tmp
+                tweetArray.append(j)
+
+            # Printing the tweets
+            print(tweetArray)
+
+        # Driver code
+        if __name__ == '__main__':
+            # Here goes the twitter handle for the user
+            # whose tweets are to be extracted.
+            get_tweets(input('Enter @: '))
 
 
 # This allows the user to start the project again instead of ending the function
