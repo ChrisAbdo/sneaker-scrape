@@ -101,6 +101,19 @@ def start_project():
 
             total_retweets = sum(int(tweet.retweet_count) for tweet in tweets)
             print("Total retweets for the user timeline: " + str(total_retweets))
+            print("\n")
+
+            top_tweets = input(
+                'Would you like to see the top tweets from this account? y/n\n')
+            if top_tweets == "y":
+                # if favorite_count is greater than 800, print the tweet
+                for tweet in tweets:
+                    if tweet.favorite_count > 1000:
+                        print("\n")
+                        print(tweet.text.split()[:5])
+                        print('more than 1000 favorites')
+                        print("\n")
+                        # print the first 5 words of the tweet
 
         # Driver code
         if __name__ == '__main__':
