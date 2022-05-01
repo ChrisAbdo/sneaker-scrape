@@ -108,10 +108,18 @@ def start_project():
             if top_tweets == "y":
                 # if favorite_count is greater than 800, print the tweet
                 for tweet in tweets:
-                    if tweet.favorite_count > 1000:
+                    if tweet.favorite_count > 100:
                         print("\n")
                         print(tweet.text.split()[:5])
                         print('more than 1000 favorites')
+                        # print the status id of the tweet and link to the tweet
+                        print('Link to the tweet: https://twitter.com/' +
+                              username + '/status/' + tweet.id_str)
+                        # if the tweet has an image associated with it, print the link to the image
+                        if tweet.entities.get('media', False):
+                            media_url = tweet.entities['media'][0]['media_url']
+                            print('Link to the image: ' + media_url)
+
                         print("\n")
                         # print the first 5 words of the tweet
 
