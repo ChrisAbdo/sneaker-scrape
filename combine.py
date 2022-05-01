@@ -23,7 +23,7 @@ api = tweepy.API(auth)
 # Begins the projects #################################################
 def start_project():
     beginningChoice = input(
-        "Welcome to TheShoeTracker. Here are some options:\n a) search for the top sneaker accounts\n b)search for specific keywords\nPlease enter your choice: ")
+        "Welcome to TheShoeTracker. Here are some options:\n a) search for the top sneaker accounts\n b) search for specific keywords\n c) search for tweets from a specific account\nPlease enter your choice: ")
 
     # if beginningChoice equals a, then run users
     if beginningChoice == "a":
@@ -45,7 +45,8 @@ def start_project():
                 'These are the users that are worth following (more than 100k followers)')
             for user in users:
                 if user.followers_count > 100000:
-                    print(user.screen_name + ' - ' + 'you should follow')
+                    print(user.screen_name + ' - ' +
+                          'very reputable account. twitter.com/' + user.screen_name)
                     print("\n")
 
         else:
@@ -54,7 +55,7 @@ def start_project():
     if beginningChoice == "b":
         choice = input("Enter the hashtag: ")
 
-        tweets = tweepy.Cursor(api.search_tweets, q=choice).items(2)
+        tweets = tweepy.Cursor(api.search_tweets, q=choice).items(10)
 
         for tweet in tweets:
             # if tweet.text contains 'test tweet 1', return hello!
@@ -67,8 +68,11 @@ def start_project():
             print("\n")
 
     if beginningChoice == "c":
-        print("Enter the @ of the trusted sneaker account you would like to pull information from. We recommend ")
 
+        print("Enter the @ of the trusted sneaker account you would like to pull information from. We recommend kicksonfire, zSneakerHeadz, sneakerhuddle, SoleRetriever, SOLELINKS.\nIt is pretty apparent which sneakers catch the attention of sneaker collectors due to the drastic increase in likes.")
+        print("\n")
+
+        # Inner function for retrieving the tweets from a specific account, utilizing  if __name__ == '__main__' to ensure that the function is only called when the file is run directly.
         def get_tweets(username):
             tweets = api.user_timeline(screen_name=username)
 
@@ -84,8 +88,19 @@ def start_project():
                 # Appending tweets to the empty array tmp
                 tweetArray.append(j)
 
-            # Printing the tweets
-            print(tweetArray)
+            # Print 10 recent tweets and their favorite_count
+            for tweet in tweets[:20]:
+                # Removing ad here to keep content consistent, the ad is still a release date
+                print(tweet.text.replace('Ad:', ''))
+                print(str(tweet.favorite_count)+' likes')
+                print(str(tweet.retweet_count)+' retweets')
+                print("\n")
+
+            total_likes = sum(int(tweet.favorite_count) for tweet in tweets)
+            print("Total likes for the user timeline: " + str(total_likes))
+
+            total_retweets = sum(int(tweet.retweet_count) for tweet in tweets)
+            print("Total retweets for the user timeline: " + str(total_retweets))
 
         # Driver code
         if __name__ == '__main__':
