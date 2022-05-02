@@ -9,7 +9,6 @@ api_key = "Bt1HVhGcL1Z4oCSGZQ2lzIE3V"
 api_key_secret = "9kbkZPNXRaTQ6juAoSOxUuUYbIZNAvX69xEuA9zfc4ta5CKKFT"
 #######################################################################
 
-
 # Simple Twitter Authentication for Elevated Access Point #############
 auth = tweepy.OAuthHandler(
     consumer_key=api_key, consumer_secret=api_key_secret)
@@ -28,33 +27,42 @@ def start_project():
     # if beginningChoice equals a, then run users
     if beginningChoice == "a":
         # set q to search for sneakers, sneaker, kicks
-        query = input('Please enter your search query: ')
+        query = input(
+            'Please enter your search query (i.e sneakers, sneaker, kicks, shoes): ')
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         users = api.search_users(query)
+
+        print('The top accounts for ' + query + ' are: ')
+        print('\n')
         for user in users:
             print(user.screen_name+' - '+str(user.followers_count)+' followers')
             print("\n")
-            if user.followers_count > 100000:
-                print('The account '+user.screen_name+' has ' +
-                      str(user.followers_count)+' followers')
-
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         topFollowers = input(
             "Would you like to see the most reputable accounts? (y/n) ")
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         if topFollowers == "y":
             # print the accounts that have more than 100000 followers.
             print(
-                'These are the users that are worth following (more than 100k followers)')
+                'These are the users that are worth following (more than 100k followers):')
+            print('\n')
             for user in users:
-                if user.followers_count > 100000:
-                    print(user.screen_name + ' - ' +
-                          'very reputable account. twitter.com/' + user.screen_name)
+                if user.followers_count > 50000:
+                    # print the screen name of the user and their followers count
+                    print(user.screen_name+' - Very reputable account with ' +
+                          str(user.followers_count)+' followers')
                     print("\n")
 
         else:
-            print("Okay, goodbye!")
+            print("Okay. Returning back to main page.")
 
     if beginningChoice == "b":
-        choice = input("Enter the hashtag: ")
-        tweets = tweepy.Cursor(api.search_tweets, q=choice).items(10)
+        choice = input(
+            "Enter the hashtag/term (i.e airjordan1, airjordan2, airjordan3, etc, yeezys): ")
+        choice_amount = int(input('How many tweets would you like to see? '))
+        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        tweets = tweepy.Cursor(
+            api.search_tweets, q=choice).items(choice_amount)
         for tweet in tweets:
             # if tweet.text contains 'test tweet 1', return hello!
             if '$' in tweet.text:
@@ -104,10 +112,11 @@ def start_project():
             top_tweets = input(
                 'Would you like to see the top tweets from this account? y/n\n')
             if top_tweets == "y":
-                # if favorite_count is greater than 800, print the tweet
+                # here we set the loop to the custom integer input of number_of_tweets
                 for tweet in tweets[:number_of_tweets]:
                     if tweet.favorite_count > 100:
                         print("\n")
+                        # hard coded the number of words to print, can be modified however 5 seems to work well
                         print(tweet.text.split()[:5])
                         # print the number of likes that the tweet has
                         print(str(tweet.favorite_count)+' likes')
@@ -130,6 +139,7 @@ def start_project():
             get_tweets(input('Enter @: '))
 
 
+print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
 # This allows the user to start the project again instead of ending the function
 while True:
     start_project()
