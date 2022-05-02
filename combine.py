@@ -54,9 +54,7 @@ def start_project():
 
     if beginningChoice == "b":
         choice = input("Enter the hashtag: ")
-
         tweets = tweepy.Cursor(api.search_tweets, q=choice).items(10)
-
         for tweet in tweets:
             # if tweet.text contains 'test tweet 1', return hello!
             if '$' in tweet.text:
@@ -64,15 +62,13 @@ def start_project():
             print(tweet.text)
             # print the amount of likes that the tweet has
             print(str(tweet.favorite_count)+' likes')
-
             print("\n")
 
     if beginningChoice == "c":
-
         print("Enter the @ of the trusted sneaker account you would like to pull information from. We recommend kicksonfire, zSneakerHeadz, sneakerhuddle, SoleRetriever, SOLELINKS.\nIt is pretty apparent which sneakers catch the attention of sneaker collectors due to the drastic increase in likes.")
         print("\n")
-
         # Inner function for retrieving the tweets from a specific account, utilizing  if __name__ == '__main__' to ensure that the function is only called when the file is run directly.
+
         def get_tweets(username):
             tweets = api.user_timeline(screen_name=username)
 
@@ -89,7 +85,9 @@ def start_project():
                 tweetArray.append(j)
 
             # Print 10 recent tweets and their favorite_count
-            for tweet in tweets[:20]:
+            number_of_tweets = int(
+                input("How many tweets would you like to see? "))
+            for tweet in tweets[:number_of_tweets]:
                 # Removing ad here to keep content consistent, the ad is still a release date
                 print(tweet.text.replace('Ad:', ''))
                 print(str(tweet.favorite_count)+' likes')
@@ -107,11 +105,13 @@ def start_project():
                 'Would you like to see the top tweets from this account? y/n\n')
             if top_tweets == "y":
                 # if favorite_count is greater than 800, print the tweet
-                for tweet in tweets:
+                for tweet in tweets[:number_of_tweets]:
                     if tweet.favorite_count > 100:
                         print("\n")
                         print(tweet.text.split()[:5])
-                        print('more than 1000 favorites')
+                        # print the number of likes that the tweet has
+                        print(str(tweet.favorite_count)+' likes')
+
                         # print the status id of the tweet and link to the tweet
                         print('Link to the tweet: https://twitter.com/' +
                               username + '/status/' + tweet.id_str)
