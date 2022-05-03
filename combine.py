@@ -18,8 +18,12 @@ auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
 #######################################################################
 
+# create a separator so you only have one line in the code
+sep = "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 
 # Begins the projects #################################################
+
+
 def start_project():
     beginningChoice = input(
         "Welcome to TheShoeTracker. Here are some options:\n a) search for the top sneaker accounts\n b) search for specific keywords\n c) search for tweets from a specific account\nPlease enter your choice: ")
@@ -29,18 +33,21 @@ def start_project():
         # set q to search for sneakers, sneaker, kicks
         query = input(
             'Please enter your search query (i.e sneakers, sneaker, kicks, shoes): ')
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        # query_count = int(input("How many accounts would you like to see?"))
+        # users = api search for query and query_count
+
         users = api.search_users(query)
+        print(sep)
 
         print('The top accounts for ' + query + ' are: ')
         print('\n')
         for user in users:
             print(user.screen_name+' - '+str(user.followers_count)+' followers')
             print("\n")
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(sep)
         topFollowers = input(
             "Would you like to see the most reputable accounts? (y/n) ")
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+        print(sep)
         if topFollowers == "y":
             # print the accounts that have more than 100000 followers.
             print(
@@ -58,22 +65,32 @@ def start_project():
 
     if beginningChoice == "b":
         choice = input(
-            "Enter the hashtag/term (i.e airjordan1, airjordan2, airjordan3, etc, yeezys): ")
-        choice_amount = int(input('How many tweets would you like to see? '))
-        print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-        tweets = tweepy.Cursor(
-            api.search_tweets, q=choice).items(choice_amount)
+            "Enter the hashtag/term (i.e air jordan 1, air jordan 2, air jordan 3, etc, yeezys): ")
+        choice_amount = int(input('How many tweets would you like to see?: '))
+        tweet_type = input(
+            'Would you like to see popular or mixed tweets? (popular or mixed): ')
+        print(sep)
+        # tweets = api search with q=choice, result_type='popular' and count=choice_amount
+        tweets = api.search_tweets(
+            q=choice, result_type=tweet_type, count=choice_amount)
+
+        # hash_tag likes = sum of the likes from the tweets
+        hash_tag_likes = sum(tweet.favorite_count for tweet in tweets)
+
         for tweet in tweets:
             # if tweet.text contains 'test tweet 1', return hello!
             if '$' in tweet.text:
-                print("hello!")
+                print("This tweet has the price mentioned!")
             print(tweet.text)
             # print the amount of likes that the tweet has
             print(str(tweet.favorite_count)+' likes')
             print("\n")
+        print('The term '+choice+' has ' +
+              str(hash_tag_likes)+' likes in the past week (fully includes all tweets, not just choice_amount)')
 
     if beginningChoice == "c":
         print("Enter the @ of the trusted sneaker account you would like to pull information from. We recommend kicksonfire, zSneakerHeadz, sneakerhuddle, SoleRetriever, SOLELINKS.\nIt is pretty apparent which sneakers catch the attention of sneaker collectors due to the drastic increase in likes.")
+
         print("\n")
         # Inner function for retrieving the tweets from a specific account, utilizing  if __name__ == '__main__' to ensure that the function is only called when the file is run directly.
 
@@ -110,7 +127,7 @@ def start_project():
             print("\n")
 
             top_tweets = input(
-                'Would you like to see the top tweets from this account? y/n\n')
+                'Would you like to split the tweet into an array of the shoe name? y/n\n')
             if top_tweets == "y":
                 # here we set the loop to the custom integer input of number_of_tweets
                 for tweet in tweets[:number_of_tweets]:
@@ -139,7 +156,7 @@ def start_project():
             get_tweets(input('Enter @: '))
 
 
-print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+print(sep)
 # This allows the user to start the project again instead of ending the function
 while True:
     start_project()
